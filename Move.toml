@@ -1,0 +1,10 @@
+[package]
+name = "airdrop"
+version = "0.0.0"
+
+[addresses]
+AptosFramework = "0x1"
+Airdrop = "_"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir="aptos-move/framework/aptos-framework", rev = "5a30bb4c0f21c0581fc23909d55a8e7cdf8e2986"}
