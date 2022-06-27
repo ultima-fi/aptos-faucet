@@ -5,7 +5,7 @@ function stringToHex(text: string) {
   const encoded = encoder.encode(text);
   return Array.from(encoded, (i) => i.toString(16).padStart(2, "0")).join("");
 }
-export class AirdropClient {
+export class FaucetClient {
   client: RestClient;
   constructor(url: string, public module_address: string) {
     this.client = new RestClient(url);
@@ -18,7 +18,7 @@ export class AirdropClient {
     );
     const payload = {
       type: "script_function_payload",
-      function: `0x${admin.address()}::Airdrop::init`,
+      function: `0x${admin.address()}::Faucet::init`,
     };
     const tx = await this.client.generateTransaction(admin.address(), payload);
     const signedTx = await this.client.signTransaction(admin, tx);
@@ -26,7 +26,7 @@ export class AirdropClient {
     return res["hash"];
   }
 
-  createAirdropIX(
+  createFaucetIX(
     name: string,
     symbol: string,
     decimals: number,
@@ -34,18 +34,27 @@ export class AirdropClient {
   ) {
     return {
       type: "script_function_payload",
-      function: `0x${this.module_address}::Airdrop::create_airdrop`,
+      function: `0x${this.module_address}::Faucet::create_faucet_coin`,
       arguments: [stringToHex(name), stringToHex(symbol), decimals.toString()],
       type_arguments: [coinType],
     };
   }
 
-  airdropIX(coinType: string, amount: number) {
+  mintIX(coinType: string, amount: number) {
     return {
       type: "script_function_payload",
-      function: `0x${this.module_address}::Airdrop::airdrop`,
+      function: `0x${this.module_address}::Faucet::mint`,
       arguments: [amount.toString()],
       type_arguments: [coinType],
     };
+  }
+
+  async fetchFaucets(address: string) {
+    const allResources = await this.client.resources(address);
+    // ex "0x63b0f3351bdba3639c79cc2541a2af4d1531ed6bc854c383b354489a70458640::Faucet::Capabilities<0xd929c7ef372f9aa71f35b4bbc482cbf48077e2076a5e09769f7ccea14041b1be::CoinerTwo::CoinerTwo>"
+    return allResources
+      .map((x) => x.type)
+      .filter((t) => t.includes(`${this.module_address}::Faucet::Capabilities`))
+      .map((t) => t.split("Capabilities")[1]);
   }
 }

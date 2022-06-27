@@ -1,2 +1,2 @@
-import { AirdropClient } from "./airdrop";
-export { AirdropClient };
+import { FaucetClient } from "./faucet";
+export { FaucetClient };

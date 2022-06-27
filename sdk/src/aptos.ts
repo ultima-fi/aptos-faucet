@@ -4,6 +4,10 @@ import fetch from "cross-fetch";
 import assert from "assert";
 
 export type TxnRequest = Record<string, any> & { sequence_number: string };
+export type Resource = {
+  type: string;
+  data: any;
+};
 
 /** Represents an account as well as the private, public key-pair for the Aptos blockchain */
 export class Account {
@@ -57,15 +61,26 @@ export class RestClient {
     return await response.json();
   }
 
-  /** Returns all resources associated with the account */
+  async resources(accountAddress: string): Promise<null | Resource[]> {
+    const url = `${this.url}/accounts/${accountAddress}/resources`;
+
+    const response = await fetch(url);
+    if (response.status == 404) {
+      return null;
+    }
+    if (response.status != 200) {
+      assert(response.status == 200, await response.text());
+    }
+    return await response.json();
+  }
+
   async accountResource(
     accountAddress: string,
     resourceType: string
-  ): Promise<any> {
-    const response = await fetch(
-      `${this.url}/accounts/${accountAddress}/resource/${resourceType}`,
-      { method: "GET" }
-    );
+  ): Promise<null | Resource> {
+    const url = `${this.url}/accounts/${accountAddress}/resource/${resourceType}`;
+
+    const response = await fetch(url);
     if (response.status == 404) {
       return null;
     }
@@ -189,37 +204,10 @@ export class RestClient {
       accountAddress,
       "0x1::Coin::CoinStore<0x1::TestCoin::TestCoin>"
     );
-    if (resource == null) {
+    if (resource === null) {
       return null;
     }
     return parseInt(resource["data"]["coin"]["value"]);
-  }
-
-  /** Transfer a given coin amount from a given Account to the recipient's account address.
-   Returns the sequence number of the transaction used to transfer. */
-  async transfer(
-    accountFrom: Account,
-    recipient: string,
-    amount: number
-  ): Promise<string> {
-    const payload: {
-      function: string;
-      arguments: string[];
-      type: string;
-      type_arguments: any[];
-    } = {
-      type: "script_function_payload",
-      function: "0x1::Coin::transfer",
-      type_arguments: ["0x1::TestCoin::TestCoin"],
-      arguments: [`0x${recipient}`, amount.toString()],
-    };
-    const txnRequest = await this.generateTransaction(
-      accountFrom.address(),
-      payload
-    );
-    const signedTxn = await this.signTransaction(accountFrom, txnRequest);
-    const res = await this.submitTransaction(signedTxn);
-    return res["hash"].toString();
   }
 }
 
