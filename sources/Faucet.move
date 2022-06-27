@@ -6,12 +6,15 @@ module Faucet::Faucet {
     use Std::Signer;
     use Std::Event::{Self, EventHandle};
 
+    // Action requires admin
     const ENOT_ADMIN: u64 = 1;
     // The faucet is not published
     const ENOT_PUBLISHED: u64 = 2;
     // The Faucet root store is not initialized
     const ENOT_INITIALIZED: u64 = 3;
+    // The Faucet is paused
     const EPAUSED: u64 = 4;
+    // The action is not authorized
     const ENOT_AUTHORIZED: u64 = 5;
 
     struct FaucetMeta<phantom CoinType> has key {
