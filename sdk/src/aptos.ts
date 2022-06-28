@@ -61,6 +61,33 @@ export class RestClient {
     return await response.json();
   }
 
+  async allCoinBalances(
+    accountAddress: string
+  ): Promise<{ coin: string; balance: number }[]> {
+    const allResources = await this.resources(accountAddress);
+    const stripType = (s: string) => s.slice(21, s.length - 1);
+    return allResources
+      .filter((r) => r.type.includes("0x1::Coin::CoinStore"))
+      .map((r) => ({
+        balance: parseInt(r.data["coin"]["value"]),
+        coin: stripType(r.type),
+      }));
+  }
+
+  async coinBalance(
+    accountAddress: string,
+    cointType: string
+  ): Promise<number> {
+    const res = await this.accountResource(
+      accountAddress,
+      `0x1::Coin::CoinStore<${cointType}>`
+    );
+
+    if (!res) return 0;
+
+    return parseInt(res["data"]["coin"]["value"]);
+  }
+
   async resources(accountAddress: string): Promise<null | Resource[]> {
     const url = `${this.url}/accounts/${accountAddress}/resources`;
 

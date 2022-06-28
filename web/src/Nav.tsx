@@ -11,8 +11,8 @@ export function Nav() {
         <li className={location.pathname === "/mint" ? "is-active" : ""}>
           <Link to="/mint">Mint</Link>
         </li>
-        <li>
-          <a>Transfer</a>
+        <li className={location.pathname === "/balances" ? "is-active" : ""}>
+          <Link to="/balances">Balances</Link>
         </li>
       </ul>
     </div>

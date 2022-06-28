@@ -1,12 +1,16 @@
 export function ListFaucets(props: { faucets: string[] }) {
   return (
     <div>
-      <h3>Faucets you created</h3>
-      <ul>
-        {props.faucets.map((x, i) => (
-          <li key={i}>{x}</li>
-        ))}
-      </ul>
+      <p>Faucets you created</p>
+      <table className="table is-bordered is-striped">
+        <tbody>
+          {props.faucets.map((x, i) => (
+            <tr key={i}>
+              <td>{x.slice(1, x.length - 1)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

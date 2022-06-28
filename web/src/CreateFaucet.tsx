@@ -4,19 +4,21 @@ import { compile } from "./compiler";
 import { AptosContext } from "./context";
 import { Field } from "./Field";
 import { ListFaucets } from "./ListFaucets";
-import { explorer } from "./util";
+import { link } from "./util";
 
 export function CreateFaucet() {
   const toastId = useRef(null) as any;
   const [coinName, setCoinName] = useState("");
+  const [decimals, setDecimals] = useState(0);
   const [faucets, setFaucets] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const ctx = useContext(AptosContext);
   useEffect(refreshFaucets, [ctx.sdk, ctx.address]);
   const validRegex = new RegExp("^[A-Z][A-Za-z]*$");
   const coinNameValid = coinName.length > 0 && validRegex.test(coinName);
-
-  const disabled = busy || !coinNameValid || !ctx.address;
+  const decimalsValid = decimals >= 0;
+  const buttonDisabled = busy || !coinNameValid || !decimalsValid;
+  const allDisabled = busy || !ctx.address || !ctx.sdk;
   const help =
     coinName !== "" && !coinNameValid ? (
       <p className="help is-danger">
@@ -28,15 +30,6 @@ export function CreateFaucet() {
     if (!ctx.sdk) return;
     if (ctx.address === "") return;
     ctx.sdk.fetchFaucets(ctx.address).then(setFaucets);
-  }
-
-  function link(hash: string) {
-    const url = explorer(hash);
-    return (
-      <a href={url} target="_blank">
-        View transaction.
-      </a>
-    );
   }
 
   async function createCoin() {
@@ -57,38 +50,60 @@ export function CreateFaucet() {
       const typestring = `0x${ctx.address}::${coinName}::${coinName}`;
       toast.update(toastId.current, { render: "Creating coin faucet" });
       {
-        const ix = ctx.sdk?.createFaucetIX(coinName, coinName, 6, typestring);
+        const ix = ctx.sdk?.createFaucetIX(
+          coinName,
+          coinName,
+          decimals,
+          typestring
+        );
         const tx = await window.aptos.signAndSubmitTransaction(ix);
         const hash = tx["hash"];
         await ctx.sdk?.client.waitForTransaction(tx["hash"]);
         toast(<span>Coin faucet created. {link(hash)}</span>);
       }
-
+    } catch (e: any) {
+      toast.error(e);
+    } finally {
       setBusy(false);
       setCoinName("");
       refreshFaucets();
-    } catch (e: any) {
-      toast.error(e);
     }
   }
 
   return (
     <div>
-      <h2>Create Coin</h2>
+      <h3 className="title is-3">Create Faucet</h3>
       <Field label="Name" help={help}>
         <input
           className="input"
           type="text"
+          disabled={allDisabled}
           placeholder="FooCoin"
           value={coinName}
           onChange={(e) => setCoinName(e.target.value)}
         ></input>
       </Field>
 
-      <button className="button" onClick={createCoin} disabled={disabled}>
-        Create Coin
+      <Field label="Decimals">
+        <input
+          disabled={allDisabled}
+          type="number"
+          className="input"
+          placeholder="0"
+          value={decimals || ""}
+          onChange={(e) => setDecimals(+e.target.value)}
+        ></input>
+      </Field>
+
+      <button
+        className="button is-info"
+        onClick={createCoin}
+        disabled={buttonDisabled}
+      >
+        Create Faucet
       </button>
 
+      <hr></hr>
       <div>
         <ListFaucets faucets={faucets} />
       </div>

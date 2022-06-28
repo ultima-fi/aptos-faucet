@@ -1,6 +1,6 @@
 module Faucet::Faucet {
     use AptosFramework::Coin::{Self, MintCapability, BurnCapability};
-    use AptosFramework::Table::{Table, Self};
+    use AptosFramework::IterableTable::{IterableTable, Self};
     use AptosFramework::ASCII;
     use AptosFramework::TypeInfo::{TypeInfo, type_of};
     use Std::Signer;
@@ -24,7 +24,7 @@ module Faucet::Faucet {
     }
 
     struct FaucetStore has key {
-        addresses: Table<TypeInfo, address>
+        addresses: IterableTable<TypeInfo, address>
     }
 
     struct FaucetEvents has key {
@@ -35,11 +35,16 @@ module Faucet::Faucet {
         type_info: TypeInfo
     }
 
-    public(script) fun init(admin: signer) {
-        assert!(Signer::address_of(&admin) == @Faucet, ENOT_ADMIN);
-        move_to(&admin, FaucetStore {
-            addresses: Table::new<TypeInfo, address>()
+    public(script) fun init(admin: &signer) {
+        assert!(Signer::address_of(admin) == @Faucet, ENOT_ADMIN);
+
+        move_to(admin, FaucetStore {
+            addresses: IterableTable::new<TypeInfo, address>()
         });
+
+        move_to(admin, FaucetEvents {
+            register_events: Event::new_event_handle<RegisterEvent>(admin),
+        })
     }
 
     public(script) fun create_faucet_coin<C>(
@@ -58,9 +63,17 @@ module Faucet::Faucet {
             });
         };
 
-        let events = borrow_global_mut<FaucetEvents>(addr);
+        let user_events = borrow_global_mut<FaucetEvents>(addr);
         Event::emit_event<RegisterEvent>(
-            &mut events.register_events,
+            &mut user_events.register_events,
+            RegisterEvent {
+                type_info: type_of<C>(),
+            },
+        );
+
+        let central_events = borrow_global_mut<FaucetEvents>(@Faucet);
+        Event::emit_event<RegisterEvent>(
+            &mut central_events.register_events,
             RegisterEvent {
                 type_info: type_of<C>(),
             },
@@ -84,7 +97,7 @@ module Faucet::Faucet {
         let store = borrow_global_mut<FaucetStore>(@Faucet);
         let ti = type_of<C>();
         let addresses = &mut store.addresses;
-        Table::add<TypeInfo, address>(addresses, ti, addr);
+        IterableTable::add<TypeInfo, address>(addresses, ti, addr);
     }
 
     public(script) fun mint<C>(owner: signer, amount: u64) acquires FaucetStore, FaucetMeta {
@@ -122,8 +135,8 @@ module Faucet::Faucet {
         assert!(exists<FaucetStore>(@Faucet), ENOT_INITIALIZED);
         let store = borrow_global<FaucetStore>(@Faucet);
         let ti = type_of<C>();
-        assert!(Table::contains<TypeInfo, address>(&store.addresses, ti), ENOT_PUBLISHED);
-        let addr = *Table::borrow<TypeInfo, address>(&store.addresses, ti);
+        assert!(IterableTable::contains<TypeInfo, address>(&store.addresses, ti), ENOT_PUBLISHED);
+        let addr = *IterableTable::borrow<TypeInfo, address>(&store.addresses, ti);
         addr
     }
 }
