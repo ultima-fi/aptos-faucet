@@ -2,7 +2,7 @@ import { useContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { AptosContext } from "./context";
 import { Field } from "./Field";
-import { link } from "./util";
+import { link, validType } from "./util";
 
 export function Mint() {
   const toastId = useRef(null) as any;
@@ -10,10 +10,15 @@ export function Mint() {
   const [amount, setAmount] = useState(0);
   const [busy, setBusy] = useState(false);
   const ctx = useContext(AptosContext);
-
+  const coinTypeValid = validType(coinType);
   const buttonDisabled = !amount || busy;
   const allDisabled = busy || !ctx.sdk || !ctx.address;
-
+  const help =
+    coinType !== "" && !coinTypeValid ? (
+      <p className="help is-danger">
+        Coin type is invalid. Must be in the format 0x123::FooCoin::FooCoin.
+      </p>
+    ) : undefined;
   async function doMint() {
     const sdk = ctx.sdk;
     if (!sdk) return;
@@ -72,7 +77,7 @@ export function Mint() {
   return (
     <div>
       <h3 className="title is-3">Mint from faucet</h3>
-      <Field label="Coin address">
+      <Field label="Coin address" help={help}>
         <input
           className="input"
           disabled={allDisabled}

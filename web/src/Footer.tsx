@@ -7,7 +7,11 @@ export function Footer() {
         <p>
           Aptos <strong>Coin Emporium</strong> by thomas@ultimalabs.xyz. The
           source code is
-          <a href="https://github.com/ultima-fi/aptos-faucet" target="_blank">
+          <a
+            rel="noreferrer"
+            href="https://github.com/ultima-fi/aptos-faucet"
+            target="_blank"
+          >
             &nbsp;here
           </a>
         </p>
