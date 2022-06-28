@@ -34,15 +34,28 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.8.4/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyAM-qRHak-clX9ul52N1QvzMe52HLmEAvY",
+        authDomain: "aptos-coin-emporium-fef6a.firebaseapp.com",
+        projectId: "aptos-coin-emporium-fef6a",
+        storageBucket: "aptos-coin-emporium-fef6a.appspot.com",
+        messagingSenderId: "459504345310",
+        appId: "1:459504345310:web:f857e2e661c5c81aa0e24f",
+        measurementId: "G-69XYENG974",
+      };
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
   </body>
 </html>
