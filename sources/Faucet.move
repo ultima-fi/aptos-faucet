@@ -88,6 +88,10 @@ module Faucet::Faucet {
         IterableTable::add<TypeInfo, address>(addresses, ti, addr);
     }
 
+    public fun is_faucet_published<C>(addr: address): bool {
+        exists<FaucetMeta<C>>(addr)
+    }
+
     public(script) fun mint<C>(owner: signer, amount: u64) acquires FaucetStore, FaucetMeta {
         let addr = get_faucet_addr<C>();
         let receiver = Signer::address_of(&owner); 
