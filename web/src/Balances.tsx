@@ -34,22 +34,24 @@ export function Balances() {
       <p className="has-text-weight-light mb-3">
         Your balances for all coins, including standard non-faucet coins.
       </p>
-      <table className="table is-bordered is-striped">
-        <thead>
-          <tr>
-            <th>Coin</th>
-            <th>Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          {balances.map((b, i) => (
-            <tr key={i}>
-              <td>{b.coin}</td>
-              <td>{b.balance}</td>
+      {balances.length > 0 && (
+        <table className="table is-bordered is-striped">
+          <thead>
+            <tr>
+              <th>Coin</th>
+              <th>Balance</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {balances.map((b, i) => (
+              <tr key={i}>
+                <td>{b.coin}</td>
+                <td>{b.balance}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <button
         disabled={disabled}
         className="is-info button"
