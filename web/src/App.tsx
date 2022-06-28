@@ -13,17 +13,19 @@ import { Footer } from "./Footer";
 
 function App() {
   const [user, setUser] = useState<string>("");
-  const [errorBanner, setErrorBannoer] = useState(false);
+  const [errorBanner, setErrorBanner] = useState(false);
   const [sdk, setSDK] = useState<FaucetClient>();
 
   useEffect(() => {
-    if (!window.aptos) {
-      setErrorBannoer(true);
-      return;
-    }
-    setSDK(new FaucetClient(RPC_URL, FAUCET_MODULE));
-    window.aptos.connect();
-    window.aptos.account().then((a: any) => setUser(a.address.slice(2)));
+    setTimeout(() => {
+      if (!window.aptos) {
+        setErrorBanner(true);
+        return;
+      }
+      setSDK(new FaucetClient(RPC_URL, FAUCET_MODULE));
+      window.aptos.connect();
+      window.aptos.account().then((a: any) => setUser(a.address.slice(2)));
+    }, 1);
   }, [window.aptos]);
 
   return (
