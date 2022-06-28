@@ -1,19 +1,23 @@
 import { Link, useLocation } from "react-router-dom";
 
-export function Nav() {
+function NavLink(props: { path: string; display: string }) {
   const location = useLocation();
+
+  return (
+    <li className={location.pathname === props.path ? "is-active" : ""}>
+      <Link to={props.path}>{props.display}</Link>
+    </li>
+  );
+}
+
+export function Nav() {
   return (
     <div className="tabs">
       <ul>
-        <li className={location.pathname === "/" ? "is-active" : ""}>
-          <Link to="/">Create</Link>
-        </li>
-        <li className={location.pathname === "/mint" ? "is-active" : ""}>
-          <Link to="/mint">Mint</Link>
-        </li>
-        <li className={location.pathname === "/balances" ? "is-active" : ""}>
-          <Link to="/balances">Balances</Link>
-        </li>
+        <NavLink path="/" display="Create" />
+        <NavLink path="/mint" display="Mint" />
+        <NavLink path="/balances" display="Balances" />
+        <NavLink path="/transfer" display="Transfer" />
       </ul>
     </div>
   );

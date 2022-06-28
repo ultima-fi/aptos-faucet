@@ -8,8 +8,10 @@ import { AptosContext } from "./context";
 import { CreateFaucet } from "./CreateFaucet";
 import { Mint } from "./Mint";
 import { Nav } from "./Nav";
-import { Balances } from "./Balances";
 import { Footer } from "./Footer";
+import { Transfer } from "./Transfer";
+import { ErrorBanner } from "./ErrorBanner";
+import { Balances } from "./Balances";
 
 function App() {
   const [user, setUser] = useState<string>("");
@@ -39,18 +41,7 @@ function App() {
               Ultima Labs
             </a>
           </p>
-          {errorBanner && (
-            <div className="is-danger notification">
-              You must{" "}
-              <a
-                href="https://aptos.dev/tutorials/building-wallet-extension/"
-                target="_blank"
-              >
-                install the Aptos wallet extension{" "}
-              </a>
-              to use this
-            </div>
-          )}
+          {errorBanner && <ErrorBanner />}
           {user && <p>You: 0x{user}</p>}
           <br></br>
           <BrowserRouter>
@@ -59,6 +50,7 @@ function App() {
               <Route path="/" element={<CreateFaucet />}></Route>
               <Route path="/mint" element={<Mint />}></Route>
               <Route path="/balances" element={<Balances />}></Route>
+              <Route path="/transfer" element={<Transfer />}></Route>
             </Routes>
           </BrowserRouter>
         </div>
