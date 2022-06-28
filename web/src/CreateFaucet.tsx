@@ -73,6 +73,14 @@ export function CreateFaucet() {
   return (
     <div>
       <h3 className="title is-3">Create Faucet</h3>
+      <p className="has-text-weight-light mb-3">
+        A faucet is a unique coin that any account can mint for themselves. This
+        is useful for testing & and letting users serve themselves your coins.
+        <br />
+        The process of creating a faucet involves deploying a new module to
+        Aptos. The <strong>Coin Emporium</strong> compiles the module for you.
+      </p>
+
       <Field label="Name" help={help}>
         <input
           className="input"

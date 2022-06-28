@@ -30,6 +30,10 @@ export function Balances() {
 
   return (
     <div>
+      <h3 className="title is-3">Coin Banaces</h3>
+      <p className="has-text-weight-light mb-3">
+        Your balances for all coins, including standard non-faucet coins.
+      </p>
       <table className="table is-bordered is-striped">
         <thead>
           <tr>
