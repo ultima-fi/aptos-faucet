@@ -104,7 +104,6 @@ module Faucet::Faucet {
     public(script) fun burn<C>(account: &signer, amount: u64) acquires FaucetStore, FaucetMeta {
         let addr = get_faucet_addr<C>();
         let faucet = borrow_global<FaucetMeta<C>>(addr);
-        assert!(!faucet.is_paused, EPAUSED);
         let to_burn = Coin::withdraw<C>(account, amount);
         Coin::burn(to_burn, &faucet.burn_cap);
     }

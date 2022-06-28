@@ -66,6 +66,37 @@ export class FaucetClient {
     };
   }
 
+  unpauseIX(coinType: string): FunctionPayload {
+    return {
+      type: "script_function_payload",
+      function: `0x${this.module_address}::Faucet::unpause`,
+      arguments: [],
+      type_arguments: [coinType],
+    };
+  }
+
+  registerIX(
+    coinType: string,
+    name: string,
+    symbol: string,
+    description: string,
+    logoURL: string,
+    decimals: number
+  ): FunctionPayload {
+    return {
+      type: "script_function_payload",
+      function: `0x${this.module_address}::Registry::put`,
+      arguments: [
+        stringToHex(name),
+        stringToHex(symbol),
+        stringToHex(description),
+        stringToHex(logoURL),
+        decimals.toString(),
+      ],
+      type_arguments: [coinType],
+    };
+  }
+
   async fetchFaucets(address: string) {
     const allResources = await this.client.resources(address);
     // ex "0x63b0f3351bdba3639c79cc2541a2af4d1531ed6bc854c383b354489a70458640::Faucet::Capabilities<0xd929c7ef372f9aa71f35b4bbc482cbf48077e2076a5e09769f7ccea14041b1be::CoinerTwo::CoinerTwo>"

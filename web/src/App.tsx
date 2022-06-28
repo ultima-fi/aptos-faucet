@@ -19,6 +19,7 @@ function App() {
   const [sdk, setSDK] = useState<FaucetClient>();
 
   useEffect(() => {
+    // window.aptos is flaky
     setTimeout(() => {
       if (!window.aptos) {
         setErrorBanner(true);
@@ -27,7 +28,7 @@ function App() {
       setSDK(new FaucetClient(RPC_URL, FAUCET_MODULE));
       window.aptos.connect();
       window.aptos.account().then((a: any) => setUser(a.address.slice(2)));
-    }, 1);
+    }, 1000);
   }, [window.aptos]);
 
   return (
