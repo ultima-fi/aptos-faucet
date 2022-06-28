@@ -111,10 +111,14 @@ export function CreateFaucet() {
         Create Faucet
       </button>
 
-      <hr></hr>
-      <div>
-        <ListFaucets faucets={faucets} />
-      </div>
+      {faucets.length > 0 && (
+        <>
+          <hr></hr>
+          <div>
+            <ListFaucets faucets={faucets} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
