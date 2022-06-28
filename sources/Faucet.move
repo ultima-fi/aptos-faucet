@@ -41,10 +41,6 @@ module Faucet::Faucet {
         move_to(admin, FaucetStore {
             addresses: IterableTable::new<TypeInfo, address>()
         });
-
-        move_to(admin, FaucetEvents {
-            register_events: Event::new_event_handle<RegisterEvent>(admin),
-        })
     }
 
     public(script) fun create_faucet_coin<C>(
@@ -66,14 +62,6 @@ module Faucet::Faucet {
         let user_events = borrow_global_mut<FaucetEvents>(addr);
         Event::emit_event<RegisterEvent>(
             &mut user_events.register_events,
-            RegisterEvent {
-                type_info: type_of<C>(),
-            },
-        );
-
-        let central_events = borrow_global_mut<FaucetEvents>(@Faucet);
-        Event::emit_event<RegisterEvent>(
-            &mut central_events.register_events,
             RegisterEvent {
                 type_info: type_of<C>(),
             },
