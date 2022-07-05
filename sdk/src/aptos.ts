@@ -232,13 +232,13 @@ export class RestClient {
   }
 
   /** Returns the test coin balance associated with the account */
-  async accountBalance(accountAddress: string): Promise<number | null> {
+  async accountBalance(accountAddress: string): Promise<number> {
     const resource = await this.accountResource(
       accountAddress,
       "0x1::Coin::CoinStore<0x1::TestCoin::TestCoin>"
     );
     if (resource === null) {
-      return null;
+      return 0;
     }
     return parseInt(resource["data"]["coin"]["value"]);
   }

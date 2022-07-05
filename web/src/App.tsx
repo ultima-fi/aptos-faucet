@@ -13,6 +13,7 @@ import { Transfer } from "./Transfer";
 import { ErrorBanner } from "./ErrorBanner";
 import { Balances } from "./Balances";
 import { Register } from "./Register";
+import { LowBalanceWarning } from "./LowBalanceWarning";
 
 function App() {
   const [user, setUser] = useState<string>("");
@@ -44,6 +45,7 @@ function App() {
             </a>
           </p>
           {errorBanner && <ErrorBanner />}
+          <LowBalanceWarning />
           {user && <p>You: 0x{user}</p>}
           <br></br>
           <BrowserRouter>
