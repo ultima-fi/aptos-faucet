@@ -1,6 +1,6 @@
 {
   "name": "aptos-faucet",
-  "version": "5.3.0",
+  "version": "6.0.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -10,7 +10,8 @@
     "assert": "^2.0.0",
     "cross-fetch": "^3.1.5",
     "js-sha3": "^0.8.0",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "aptos": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

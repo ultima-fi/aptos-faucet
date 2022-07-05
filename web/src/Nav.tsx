@@ -15,6 +15,7 @@ export function Nav() {
     <div className="tabs">
       <ul>
         <NavLink path="/" display="Create" />
+        <NavLink path="/register" display="Register" />
         <NavLink path="/mint" display="Mint" />
         <NavLink path="/balances" display="Balances" />
         <NavLink path="/transfer" display="Transfer" />

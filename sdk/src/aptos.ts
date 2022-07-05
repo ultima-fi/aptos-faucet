@@ -225,6 +225,12 @@ export class RestClient {
     }
   }
 
+  async transactionDidSucceed(txnHash: string) {
+    const response = await fetch(`${this.url}/transactions/${txnHash}`);
+    const d = await response.json();
+    return d["success"];
+  }
+
   /** Returns the test coin balance associated with the account */
   async accountBalance(accountAddress: string): Promise<number | null> {
     const resource = await this.accountResource(

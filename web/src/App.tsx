@@ -12,6 +12,7 @@ import { Footer } from "./Footer";
 import { Transfer } from "./Transfer";
 import { ErrorBanner } from "./ErrorBanner";
 import { Balances } from "./Balances";
+import { Register } from "./Register";
 
 function App() {
   const [user, setUser] = useState<string>("");
@@ -48,10 +49,11 @@ function App() {
           <BrowserRouter>
             <Nav />
             <Routes>
-              <Route path="/" element={<CreateFaucet />}></Route>
+              <Route path="/" element={<CreateFaucet />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/mint" element={<Mint />}></Route>
-              <Route path="/balances" element={<Balances />}></Route>
-              <Route path="/transfer" element={<Transfer />}></Route>
+              <Route path="/balances" element={<Balances />} />
+              <Route path="/transfer" element={<Transfer />} />
             </Routes>
           </BrowserRouter>
         </div>
